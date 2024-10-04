@@ -1,6 +1,9 @@
 use clap::{Command, Arg};
 
 mod test;
+pub mod dbg {
+    pub mod pea_dbg;
+}
 
 
 
