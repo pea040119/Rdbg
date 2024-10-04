@@ -1,3 +1,7 @@
+use crate::dbg::pea_dbg;
+
+
+
 pub fn test() {
-    println!("mod test");
+    pea_dbg::test();
 }
