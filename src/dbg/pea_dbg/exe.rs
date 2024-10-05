@@ -1,11 +1,11 @@
-use std::path::Path;
-use ptracer::Ptracer;
-use nix::unistd::Pid;
+use std::io::{self, Write};
+use std::str::SplitWhitespace;
 use ansi_term::Colour;
 
 use crate::utils::error::DbgError;
 use crate::utils::arg::{Arg, ArgParser};
 use crate::utils::constants::{commands, options};
+use crate::dbg::pea_dbg::ptracer::Ptracer;
 
 
 
@@ -19,21 +19,65 @@ pub fn exe(args: Vec<String>) -> Result<(), DbgError>{
             return Ok(());
         }
     }
-    match get_args(args) {
-        Ok(arg_parser) => {
-            let arg_parser: ArgParser = arg_parser;
-        },
+
+    let ptracer: Ptracer = Ptracer::new();
+
+    let arg_parser: ArgParser = match get_args(args) {
+        Ok(arg_parser) => arg_parser,
         Err(e) => {
             return Err(e);
         },
+    };
+    let file_path: String  = match arg_parser.get_values("file") {
+        Ok(values) => values[0].clone(),
+        Err(e) => {
+            return Err(e);
+        }
+    };
+
+    let file_args: String  = match arg_parser.get_values("file_args") {
+        Ok(values) => {
+            if values.len() > 0 {
+                values[0].clone()
+            } else {
+                "".to_string()
+            }
+        },
+        Err(e) => {
+            return Err(e);
+        }
+    };
+    let tracer: Ptracer = match run_file(file_path, file_args) {
+        Ok(tracer) => tracer,
+        Err(e) => {
+            return Err(e);
+        },
+    };
+
+    loop {
+        print!("{}$ ", Colour::Green.paint("exe"));
+        io::stdout().flush().unwrap();
+
+        let mut input: String = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+
+        let input: &str = input.trim();
+
+        if input == "exit"{
+            break;
+        }
+
+        let mut inputs: SplitWhitespace<'_>  = input.split_whitespace();
+        let command: &str = inputs.next().unwrap_or("");
+        let args: Vec<String> = inputs.map(|s| s.to_string()).collect();
+
+        match handle_command(command) {
+            Ok(_) => (),
+            Err(e) => {
+                eprintln!("{}", e);
+            },
+        }
     }
-    // let tracer: Ptracer = match run_file(file_path, args) {
-    //     Ok(tracer) => tracer,
-    //     Err(e) => {
-    //         eprintln!("{}", e);
-    //         return false;
-    //     },
-    // };
 
     return Ok(());
 }
@@ -80,26 +124,7 @@ fn get_args(args: Vec<String>) -> Result<ArgParser, DbgError> {
 }
 
 
-fn run_file(_file_path: &str, args: &[&str] ) -> Result<Ptracer, DbgError> {
-    let file_path: &Path = Path::new(_file_path);
-    if !file_path.exists() {
-        return Err(DbgError::new(&format!("{} does not exist", file_path.display())));
-    }
-
-    let args: Vec<String> = args.iter().map(|&arg| arg.to_string()).collect();
-
-    match Ptracer::spawn(file_path, &args) {
-        Ok(tracer) => {
-            return Ok(tracer);
-        },
-        Err(e) => {
-            return Err(DbgError::new(&format!("Failed to run {}: {}", file_path.display(), e)));
-        }
-    }
-}
-
-
-fn handle_command(command: &str, args: Vec<&str>) -> Result<String, DbgError> {
+fn handle_command(command: &str) -> Result<String, DbgError> {
     match command {
         "" => {
             return Ok("".to_string());
