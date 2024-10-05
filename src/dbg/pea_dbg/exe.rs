@@ -20,7 +20,7 @@ pub fn exe(args: Vec<String>) -> Result<(), DbgError>{
         }
     }
 
-    let ptracer: Ptracer = Ptracer::new();
+    let mut ptracer: Ptracer = Ptracer::new();
 
     let arg_parser: ArgParser = match get_args(args) {
         Ok(arg_parser) => arg_parser,
@@ -47,7 +47,7 @@ pub fn exe(args: Vec<String>) -> Result<(), DbgError>{
             return Err(e);
         }
     };
-    let tracer: Ptracer = match run_file(file_path, file_args) {
+    match ptracer.run_file(file_path, file_args) {
         Ok(tracer) => tracer,
         Err(e) => {
             return Err(e);

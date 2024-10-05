@@ -6,6 +6,7 @@ mod test;
 mod utils;
 pub mod dbg {
     pub mod pea_dbg;
+    pub mod MangoCubes_dbg;
 }
 
 
