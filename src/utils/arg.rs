@@ -202,4 +202,16 @@ impl ArgParser {
         
         Ok(())
     }
+
+
+    pub fn get_values(&self, id: &str) -> Result<&Vec<String>, DbgError> {
+        match self.get_arg(id) {
+            Some(arg) => {
+                return Ok(arg.get_values());
+            },
+            None => {
+                return Err(DbgError::new(&format!("Argument '{}' not found", id)));
+            },
+        }
+    }
 }
