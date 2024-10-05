@@ -28,7 +28,7 @@ impl Ptracer {
     }
 
 
-    fn run_file(_file_path:String, mut args: String ) -> Result<Ptracer, DbgError> {
+    pub fn run_file(&mut self, _file_path:String, mut args: String ) -> Result<Ptracer, DbgError> {
         let file_path = Path::new(&_file_path);
         if !file_path.exists() {
             return Err(DbgError::new(&format!("{} does not exist", file_path.display())));
