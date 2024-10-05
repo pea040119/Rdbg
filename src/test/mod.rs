@@ -11,9 +11,9 @@ pub fn test(tester: Option<&String>){
             let tester_print: ansi_term::ANSIGenericString<'_, str> = Colour::Blue.paint(tester.as_str());
             match tester.as_str() {
                 "pea" => {
-                    println!("{}: Running the test for {} tester...", success_header(), tester_print);
+                    println!("{}: Running the {}'s test...", success_header(), tester_print);
                     pea_test::test();
-                    println!("{}: {} test completed successfully.", success_header(), tester_print);
+                    println!("{}: {}'s test completed successfully.", success_header(), tester_print);
                 },
                 _ => {
                     eprintln!("{}: {} is not listed as a recognized tester.", error_header(), tester_print);
