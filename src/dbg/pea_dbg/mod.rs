@@ -6,12 +6,13 @@ use crate::utils::error::DbgError;
 use crate::utils::constants::commands;
 
 pub mod exe;
+pub mod ptracer;
 
 
 
 pub fn dbg() {
     loop {
-        print!(">>> ");
+        print!("{}$ ", Colour::Green.paint("dbg"));
         io::stdout().flush().unwrap();
 
         let mut input: String = String::new();
