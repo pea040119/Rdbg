@@ -2,7 +2,7 @@ use ansi_term::Colour;
 use crate::utils::constants::{error_header, success_header};
 
 pub mod pea_test;
-pub mod MangoCubes_test;
+pub mod mangocubes_test;
 
 
 
@@ -18,7 +18,7 @@ pub fn test(tester: Option<&String>){
                 },
                 "MangoCubes" => {
                     println!("{}: Running the {}'s test...", success_header(), tester_print);
-                    MangoCubes_test::test();
+                    mangocubes_test::test();
                     println!("{}: {}'s test completed successfully.", success_header(), tester_print);
                 },
                 _ => {
