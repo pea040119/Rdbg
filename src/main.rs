@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use clap::{Command, Arg};
 
 mod test;
