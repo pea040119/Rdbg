@@ -1,6 +1,7 @@
-use std::{fmt::Result, fs::File};
+use std::fs::File;
+use std::result::Result;
 
-use super::error::DbgError;
+use crate::utils::error::DbgError;
 
 
 
@@ -25,5 +26,25 @@ impl DbgLog {
             log_path,
             log_file,
         })
+    }
+
+
+    pub fn log(&mut self, message: &str) {
+        self.log_buffer.push(message.to_string());
+    }
+
+
+    pub fn flush(&mut self) -> Result<(), DbgError> {
+        for message in &self.log_buffer {
+            match writeln!(&self.log_file, "{}", message) {
+                Ok(_) => (),
+                Err(_) => {
+                    return Err(DbgError::new("Failed to write to log file"));
+                },
+            }
+        }
+
+        self.log_buffer.clear();
+        Ok(())
     }
 }
