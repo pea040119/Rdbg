@@ -8,3 +8,5 @@ ptracer = "0.3"
 nix = "0.23"
 clap = { version = "4.0", features = ["derive"] }
 ansi_term = "0.12"
+tui = "0.17"
+crossterm = "0.24"

@@ -1,9 +1,13 @@
-use std::io::{self, Write};
-use std::str::SplitWhitespace;
+use std::{
+    io::{self, Write}, 
+    str::SplitWhitespace
+};
 use ansi_term::Colour;
 
-use crate::utils::error::DbgError;
-use crate::utils::constants::commands;
+use crate::rdbg_utils::{
+    error::DbgError, 
+    constants::commands
+};
 
 pub mod exe;
 pub mod ptracer;

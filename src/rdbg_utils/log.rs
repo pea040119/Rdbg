@@ -1,8 +1,10 @@
-use std::fs::File;
-use std::io::Write;
-use std::result::Result;
+use std::{
+    fs::File, 
+    io::Write, 
+    result::Result
+};
 
-use crate::utils::error::DbgError;
+use crate::rdbg_utils::error::DbgError;
 
 
 
@@ -37,7 +39,7 @@ impl DbgLog {
     }
 
 
-    fn flush(&mut self) -> Result<(), DbgError> {
+    pub fn flush(&mut self) -> Result<(), DbgError> {
         for message in &self.log_buffer {
             match writeln!(&self.log_file, "{}", message) {
                 Ok(_) => (),
@@ -48,6 +50,6 @@ impl DbgLog {
         }
 
         self.log_buffer.clear();
-        Ok(())
+        return Ok(());
     }
 }

@@ -3,7 +3,7 @@
 use clap::{Command, Arg};
 
 mod test;
-mod utils;
+mod rdbg_utils;
 pub mod dbg {
     pub mod pea_dbg;
     pub mod mangocubes_dbg;

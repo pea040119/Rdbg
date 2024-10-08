@@ -4,7 +4,7 @@ use nix::sys::signal::Signal;
 use nix::sys::wait::{waitpid, WaitStatus};
 use nix::unistd::Pid;
 
-use crate::utils::error::DbgError;
+use crate::rdbg_utils::error::DbgError;
 
 
 
@@ -29,21 +29,22 @@ impl Ptracer {
 
 
     pub fn run_file(&mut self, _file_path:String, mut args: String ) -> Result<Ptracer, DbgError> {
-        let file_path = Path::new(&_file_path);
-        if !file_path.exists() {
-            return Err(DbgError::new(&format!("{} does not exist", file_path.display())));
-        }
+        // let file_path = Path::new(&_file_path);
+        // if !file_path.exists() {
+        //     return Err(DbgError::new(&format!("{} does not exist", file_path.display())));
+        // }
     
-        args = args.trim().to_string();
-        let args: Vec<String> = args.split_whitespace().map(|s| s.to_string()).collect();
+        // args = args.trim().to_string();
+        // let args: Vec<String> = args.split_whitespace().map(|s| s.to_string()).collect();
     
-        match Ptracer::spawn(file_path, &args) {
-            Ok(tracer) => {
-                return Ok(tracer);
-            },
-            Err(e) => {
-                return Err(DbgError::new(&format!("Failed to run {}: {}", file_path.display(), e)));
-            }
-        }
+        // match Ptracer::spawn(file_path, &args) {
+        //     Ok(tracer) => {
+        //         return Ok(tracer);
+        //     },
+        //     Err(e) => {
+        //         return Err(DbgError::new(&format!("Failed to run {}: {}", file_path.display(), e)));
+        //     }
+        // }
+        return Ok(Ptracer::new());
     }
 }

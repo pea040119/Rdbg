@@ -1,10 +1,14 @@
-use std::io::{self, Write};
-use std::str::SplitWhitespace;
+use std::{
+    io::{self, Write}, 
+    str::SplitWhitespace
+};
 use ansi_term::Colour;
 
-use crate::utils::error::DbgError;
-use crate::utils::arg::{Arg, ArgParser};
-use crate::utils::constants::{commands, options};
+use crate::rdbg_utils::{
+    error::DbgError, 
+    arg::{Arg, ArgParser}, 
+    constants::{commands, options}
+};
 use crate::dbg::pea_dbg::ptracer::Ptracer;
 
 
