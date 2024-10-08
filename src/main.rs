@@ -4,6 +4,7 @@ use clap::{Command, Arg};
 
 mod test;
 mod rdbg_utils;
+mod rdbg_ui;
 pub mod dbg {
     pub mod pea_dbg;
     pub mod mangocubes_dbg;
