@@ -1,7 +1,7 @@
-use std::io::{
+use std::{fmt::Result, io::{
     self, 
     Stdout
-};
+}};
 use tui::{
     Frame,
     backend::CrosstermBackend,
@@ -59,10 +59,19 @@ impl RdbgUI {
     }
 
 
-    pub fn draw_ui(&mut self) {
+    pub fn draw_ui(&mut self) -> Result<(), DbgError> {
         self.ui.draw(|f| {
-            let chunks = self.draw_chunk(f);
+            let chunks = match self.draw_chunk(f) {
+                Ok(chunks) => chunks,
+                Err(e) => {
+                    return Err(e);
+                }
+            };
+            self.draw_terminal(f);
+            f.render_widget(self.terminal_block, chunks[0]);
+            Ok(())
         })?;
+        Ok(())
     }
 
 
@@ -84,7 +93,11 @@ impl RdbgUI {
     }
 
 
-    fn draw_terminal(&self, f: &mut Frame<CrosstermBackend<Stdout>>, terminal_block: Vec<Rect>) {
-        terminal_block = Paragraph::new("Terminal").block(Block::default().title("Terminal").borders(Borders::ALL));
+    fn draw_terminal(&mut self, f: &mut Frame<CrosstermBackend<Stdout>>) {
+        let _terminal_block = Block::default().title("Terminal").borders(Borders::ALL);
+        self.terminal_block = Paragraph::new("Terminal").block(_terminal_block);
     }
+
+
+
 }

@@ -8,7 +8,7 @@ use crate::rdbg_utils::{
     error::DbgError, 
     constants::commands
 };
-use crate::rdbg_tui::RdbgUI;
+use crate::rdbg_ui::RdbgUI;
 
 pub mod exe;
 pub mod ptracer;
