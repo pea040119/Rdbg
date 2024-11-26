@@ -1,7 +1,10 @@
-use std::{fmt::Result, io::{
-    self, 
-    Stdout
-}};
+use std::{
+    result::Result, 
+    io::{
+        self, 
+        Stdout
+    }
+};
 use tui::{
     Frame,
     backend::CrosstermBackend,
@@ -22,9 +25,9 @@ pub struct RdbgUI {
     ui: Terminal <CrosstermBackend <io::Stdout>>,
     top_percentage: u16,
     left_percentage: u16,
-    terminal_block: Paragraph<'_>,
-    register_block: Paragraph<'_>,
-    memory_block: Paragraph<>,
+    terminal_block: Paragraph<'static>,
+    register_block: Paragraph<'static>,
+    memory_block: Paragraph<'static>,
 }
 
 
@@ -33,7 +36,6 @@ impl RdbgUI {
         let stdout = io::stdout();
         let backend = CrosstermBackend::new(stdout);
         let ui = Terminal::new(backend).unwrap();
-        let chunks = Vec::new();
         let terminal_block = Paragraph::new("Terminal").block(Block::default().title("Terminal").borders(Borders::ALL));
         let register_block = Paragraph::new("Registers").block(Block::default().title("Registers").borders(Borders::ALL));
         let memory_block = Paragraph::new("Memory").block(Block::default().title("Memory").borders(Borders::ALL));
@@ -49,7 +51,7 @@ impl RdbgUI {
     }
 
 
-    pub fn set_chunk(&mut self, top_percentage: u16, left_percentage: u16) -> Result<_, DbgError> {
+    pub fn set_chunk(&mut self, top_percentage: u16, left_percentage: u16) -> Result<(), DbgError> {
         if (top_percentage>100) || (left_percentage>100) {
             return Err(DbgError::new(&format!("Invalid percentage value: top_percentage: {}, left_percentage: {}", top_percentage, left_percentage)));
         }
@@ -60,17 +62,9 @@ impl RdbgUI {
 
 
     pub fn draw_ui(&mut self) -> Result<(), DbgError> {
-        self.ui.draw(|f| {
-            let chunks = match self.draw_chunk(f) {
-                Ok(chunks) => chunks,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            self.draw_terminal(f);
-            f.render_widget(self.terminal_block, chunks[0]);
-            Ok(())
-        })?;
+        self.ui.draw(|f|{
+            let chunks = self.draw_chunk(f)?;
+        }).map_err(|e| DbgError::new(&format!("Error drawing UI: {}", e)))?;
         Ok(())
     }
 
